@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Bot, Terminal, Cpu, Activity, Play, Send, RefreshCw, CheckCircle2, Zap, Shield, Sparkles, Code, Compass, Radio } from 'lucide-react';
+import { Bot, Terminal, Cpu, Activity, Play, Send, RefreshCw, Zap, Shield, Sparkles, Code, Compass, Radio } from 'lucide-react';
 import './AgentHub.css';
 
 interface AgentDef {
