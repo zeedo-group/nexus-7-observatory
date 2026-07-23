@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { X, Bookmark, Share2, Globe, AlertTriangle, ShieldCheck, Zap, Calendar, Cpu, Activity, Database, Radar } from 'lucide-react';
 import type { AssetItem } from '../data/assetsData';
 import './AssetModal.css';
@@ -42,7 +43,7 @@ export const AssetModal: React.FC<AssetModalProps> = ({
     }
   };
 
-  return (
+  return createPortal(
     <div className="alien-modal-backdrop" onClick={onClose}>
       <div className="alien-modal-container slide-up-anim" onClick={(e) => e.stopPropagation()}>
         
@@ -199,7 +200,8 @@ export const AssetModal: React.FC<AssetModalProps> = ({
         </div>
 
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
