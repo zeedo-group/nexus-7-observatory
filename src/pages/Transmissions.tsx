@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Radio, Volume2, VolumeX, Play, Pause, Activity, Sliders, ShieldCheck, Terminal, Maximize2, RefreshCw } from 'lucide-react';
+import { Radio, Volume2, Activity, Sliders, ShieldCheck, Terminal, Maximize2, RefreshCw } from 'lucide-react';
 import assetsData, { type AssetItem } from '../data/assetsData';
 import AssetModal from '../components/AssetModal';
 import './Transmissions.css';
@@ -16,7 +16,7 @@ interface SignalLogItem {
 }
 
 export const Transmissions: React.FC = () => {
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  const [isPlaying] = useState<boolean>(true);
   const [isAudioEnabled, setIsAudioEnabled] = useState<boolean>(false);
   const [frequency, setFrequency] = useState<number>(14.8);
   const [amplitude, setAmplitude] = useState<number>(50);
@@ -187,17 +187,29 @@ export const Transmissions: React.FC = () => {
     }
 
     try {
-      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
       const ctx = new AudioCtx();
       audioCtxRef.current = ctx;
 
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
 
-      osc.type = waveMode === 'sine' ? 'sine' : waveMode === 'cybernetic' ? 'sawtooth' : 'square';
-      osc.frequency.setValueAtTime(150 + frequency * 15, ctx.currentTime);
+      // Eerie low-frequency hum setup
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(50, ctx.currentTime); // Low frequency
+      
+      // LFO for eerie effect
+      const lfo = ctx.createOscillator();
+      lfo.type = 'sine';
+      lfo.frequency.setValueAtTime(0.5, ctx.currentTime);
+      const lfoGain = ctx.createGain();
+      lfoGain.gain.setValueAtTime(10, ctx.currentTime);
+      lfo.connect(lfoGain);
+      lfoGain.connect(osc.frequency);
+      lfo.start();
 
-      gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      gain.gain.setValueAtTime(0, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 2); // Fade in
 
       osc.connect(gain);
       gain.connect(ctx.destination);
@@ -215,12 +227,12 @@ export const Transmissions: React.FC = () => {
         oscRef.current.disconnect();
       }
     };
-  }, [isAudioEnabled, waveMode]);
+  }, [isAudioEnabled]);
 
-  // Update synth tone when frequency slider changes
+  // Update synth tone when frequency slider changes (optional secondary osc if needed)
   useEffect(() => {
     if (audioCtxRef.current && oscRef.current) {
-      oscRef.current.frequency.setValueAtTime(150 + frequency * 15, audioCtxRef.current.currentTime);
+      // oscRef.current.frequency.setValueAtTime(150 + frequency * 15, audioCtxRef.current.currentTime);
     }
   }, [frequency]);
 
@@ -266,25 +278,31 @@ export const Transmissions: React.FC = () => {
 
           <div className="visualizer-controls-top">
             <button
-              className={`btn-secondary audio-toggle-btn ${isAudioEnabled ? 'audio-on' : ''}`}
+              className={`btn-tune-in ${isAudioEnabled ? 'tuned-in' : ''}`}
               onClick={() => setIsAudioEnabled(!isAudioEnabled)}
             >
-              {isAudioEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
-              <span>{isAudioEnabled ? 'AUDIO SYNTH FEED: ON' : 'AUDIO SYNTH FEED: OFF'}</span>
-            </button>
-
-            <button
-              className="btn-secondary play-pause-btn"
-              onClick={() => setIsPlaying(!isPlaying)}
-            >
-              {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-              <span>{isPlaying ? 'PAUSE WAVE' : 'RESUME WAVE'}</span>
+              {isAudioEnabled ? <Volume2 size={24} /> : <Radio size={24} />}
+              <span>{isAudioEnabled ? 'TRANSMISSION ACTIVE' : 'TUNE IN'}</span>
             </button>
           </div>
         </div>
 
+        {/* Massive CSS Bar Visualizer Animation */}
+        <div className={`massive-visualizer ${isAudioEnabled ? 'active' : ''}`}>
+          {Array.from({ length: 64 }).map((_, i) => (
+            <div 
+              key={i} 
+              className="vis-bar" 
+              style={{
+                animationDelay: `${Math.random() * 0.5}s`,
+                animationDuration: `${0.5 + Math.random() * 1.5}s`
+              }}
+            ></div>
+          ))}
+        </div>
+
         {/* HTML5 Canvas Wave Visualization */}
-        <div className="canvas-wrapper">
+        <div className={`canvas-wrapper ${!isAudioEnabled ? 'dimmed' : ''}`}>
           <canvas ref={canvasRef} width={1000} height={220} className="wave-canvas"></canvas>
           <div className="canvas-osd">
             <span>FREQ: {frequency.toFixed(1)} GHz</span>

@@ -485,3 +485,98 @@
   gap: 6px;
   padding: 8px 16px;
 }
+
+.mt-8 {
+  margin-top: 32px;
+}
+
+/* Alien Hacker Terminal */
+.alien-terminal {
+  border: 1px solid var(--accent-emerald, #10b981);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.alien-terminal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15) 0px,
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+.alien-terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: rgba(16, 185, 129, 0.1);
+  border-bottom: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.alien-terminal-title {
+  color: #10b981;
+  font-family: var(--font-display, monospace);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.alien-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(16, 185, 129, 0.2);
+  border-top-color: #10b981;
+  border-radius: 50%;
+  margin-left: auto;
+  animation: spin 0.8s linear infinite;
+}
+
+.alien-terminal-screen {
+  height: 250px;
+  background: #020604;
+  padding: 15px 20px;
+  overflow: hidden;
+  font-family: monospace;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #10b981;
+  text-shadow: 0 0 4px rgba(16, 185, 129, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.alien-line {
+  white-space: pre-wrap;
+  word-break: break-all;
+  opacity: 0.8;
+}
+
+.alien-line:last-child {
+  opacity: 1;
+  animation: flicker 0.2s infinite alternate;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}

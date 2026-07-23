@@ -35,6 +35,30 @@ export const AgentHub: React.FC = () => {
   const [isScanning, setIsScanning] = useState<boolean>(false);
   const consoleEndRef = useRef<HTMLDivElement>(null);
 
+  const [alienLines, setAlienLines] = useState<string[]>([]);
+  const alienEndRef = useRef<HTMLDivElement>(null);
+
+  // Alien Terminal Effect
+  useEffect(() => {
+    const chars = '⎍⎎⎏⎐⎑⎒⎓⎔⎕⎖⎗⎘⎙⎚⎛⎜⎝⎞⎟⍀⍁⍂⍃⍄⍅⍆⍇⍈⍉⍊⍋⍌⍍⍎⍏⍐⍑⍒⍓⍔⍕⍖⍗0123456789ABCDEF<>[]{}!@#$%^&*()';
+    const interval = setInterval(() => {
+      const lineLength = Math.floor(Math.random() * 50) + 20;
+      let newLine = '';
+      for (let i = 0; i < lineLength; i++) {
+        newLine += chars[Math.floor(Math.random() * chars.length)];
+      }
+      setAlienLines((prev) => {
+        const next = [...prev, `[SYS.DAT.${Math.floor(Math.random() * 9999).toString().padStart(4, '0')}] ${newLine}`];
+        return next.length > 40 ? next.slice(next.length - 40) : next;
+      });
+    }, 120);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    alienEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [alienLines]);
+
   const agents: AgentDef[] = [
     {
       id: 'agent_coder',
@@ -351,37 +375,39 @@ export const AgentHub: React.FC = () => {
             <img src={activeAgent.imagePath} alt={activeAgent.name} className="agent-banner-img" />
             <div className="agent-banner-overlay"></div>
             <div className="agent-banner-content">
-              <span className="agent-badge">
-                <CheckCircle2 size={14} /> STATUS: {activeAgent.status}
-              </span>
               <h2 className="agent-banner-title glow-text">{activeAgent.name}</h2>
-              <p className="agent-banner-sub">{activeAgent.role} // {activeAgent.codename}</p>
+              <p className="agent-banner-sub text-cyan-400 font-mono text-sm tracking-wider uppercase mb-2">{activeAgent.role} // {activeAgent.codename}</p>
+              
+              <div className="agent-status-indicator mt-4 flex items-center gap-2">
+                <span className="status-dot online"></span>
+                <span className="status-text text-white/70 font-mono text-xs">STATUS: {activeAgent.status} // LOAD: {activeAgent.load}%</span>
+              </div>
             </div>
           </div>
 
-          <div className="agent-body">
-            <div className="agent-spec-box">
-              <h4>SPECIALIZATION CORE</h4>
-              <p>{activeAgent.specialization}</p>
+          <div className="agent-specs grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 p-6">
+            <div className="spec-card p-4 rounded-xl bg-black/40 border border-white/5 backdrop-blur-md">
+              <h4 className="text-cyan-300/80 font-bold text-xs tracking-[0.2em] uppercase mb-2 flex items-center gap-2"><Cpu size={14}/> SPECIALIZATION CORE</h4>
+              <p className="text-slate-300 font-medium leading-relaxed">{activeAgent.specialization}</p>
             </div>
-
-            <div className="capabilities-section">
-              <h4>PRIMARY CAPABILITIES</h4>
-              <div className="capabilities-grid">
+            
+            <div className="spec-card p-4 rounded-xl bg-black/40 border border-white/5 backdrop-blur-md">
+              <h4 className="text-purple-300/80 font-bold text-xs tracking-[0.2em] uppercase mb-2 flex items-center gap-2"><Zap size={14}/> PRIMARY CAPABILITIES</h4>
+              <ul className="capabilities-list text-slate-300 text-sm space-y-1">
                 {activeAgent.capabilities.map((cap, idx) => (
-                  <div key={idx} className="capability-tag">
-                    <Sparkles size={14} className="cap-icon" /> {cap}
+                  <div key={idx} className="capability-tag flex items-center gap-2">
+                    <Sparkles size={14} className="cap-icon text-purple-400" /> {cap}
                   </div>
                 ))}
-              </div>
+              </ul>
             </div>
 
-            <div className="quick-command-box">
-              <h4>EXECUTE DIRECT AGENT COMMAND</h4>
-              <div className="cmd-preview">
-                <code>{activeAgent.sampleCommand}</code>
+            <div className="command-sample mt-6 p-4 rounded-xl bg-cyan-950/20 border border-cyan-500/20">
+              <h4 className="text-cyan-400 font-mono text-[10px] uppercase tracking-[0.3em] mb-3 flex items-center gap-2"><Terminal size={12}/> EXECUTE DIRECT AGENT COMMAND</h4>
+              <div className="cmd-preview flex items-center justify-between">
+                <code className="text-cyan-300/80 font-mono text-sm">{activeAgent.sampleCommand}</code>
                 <button
-                  className="btn-primary run-cmd-btn"
+                  className="btn-primary run-cmd-btn bg-cyan-600/20 hover:bg-cyan-500/40 text-cyan-100 border border-cyan-500/50 rounded-lg px-4 py-2 flex items-center gap-2 transition-colors"
                   onClick={() => executeCommand(activeAgent.sampleCommand)}
                 >
                   <Play size={16} /> RUN
@@ -444,6 +470,21 @@ export const AgentHub: React.FC = () => {
             <Send size={16} /> EXECUTE
           </button>
         </form>
+      </div>
+
+      {/* Live Hacker Alien Code Terminal */}
+      <div className="alien-terminal glass-panel mt-8">
+        <div className="alien-terminal-header">
+          <Activity size={18} className="text-emerald animate-pulse" />
+          <span className="alien-terminal-title">LIVE XENO-DATA DECRYPTION STREAM</span>
+          <div className="alien-spinner"></div>
+        </div>
+        <div className="alien-terminal-screen">
+          {alienLines.map((line, idx) => (
+            <div key={idx} className="alien-line">{line}</div>
+          ))}
+          <div ref={alienEndRef} />
+        </div>
       </div>
     </div>
   );

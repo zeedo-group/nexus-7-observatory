@@ -59,11 +59,73 @@
   gap: 12px;
 }
 
-.audio-toggle-btn.audio-on {
-  background: rgba(0, 240, 255, 0.2);
+.btn-tune-in {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background: rgba(255, 0, 85, 0.15);
+  border: 2px solid #ff0055;
+  color: #ff0055;
+  border-radius: 8px;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  box-shadow: 0 0 15px rgba(255, 0, 85, 0.3), inset 0 0 10px rgba(255, 0, 85, 0.2);
+}
+
+.btn-tune-in:hover {
+  background: rgba(255, 0, 85, 0.3);
+  box-shadow: 0 0 25px rgba(255, 0, 85, 0.5), inset 0 0 15px rgba(255, 0, 85, 0.4);
+  transform: scale(1.02);
+}
+
+.btn-tune-in.tuned-in {
+  background: rgba(0, 240, 255, 0.15);
   border-color: var(--accent-cyan);
   color: var(--accent-cyan);
-  box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.4), inset 0 0 15px rgba(0, 240, 255, 0.2);
+}
+
+/* Massive CSS Bar Visualizer */
+.massive-visualizer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+  height: 120px;
+  margin-bottom: 25px;
+  padding: 0 20px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.massive-visualizer.active {
+  opacity: 1;
+}
+
+.vis-bar {
+  flex: 1;
+  background: linear-gradient(to top, var(--accent-cyan), #a855f7);
+  min-width: 4px;
+  border-radius: 4px 4px 0 0;
+  height: 5px; /* Default height */
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+
+.massive-visualizer.active .vis-bar {
+  animation: equalize 1s infinite alternate ease-in-out;
+}
+
+@keyframes equalize {
+  0% { height: 5%; }
+  50% { height: 100%; filter: hue-rotate(90deg); }
+  100% { height: 15%; }
 }
 
 .canvas-wrapper {
@@ -74,6 +136,11 @@
   border: 1px solid rgba(0, 240, 255, 0.25);
   background: #030408;
   margin-bottom: 20px;
+  transition: opacity 0.5s ease;
+}
+
+.canvas-wrapper.dimmed {
+  opacity: 0.3;
 }
 
 .wave-canvas {

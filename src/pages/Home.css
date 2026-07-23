@@ -229,3 +229,131 @@
   .hero-title { font-size: 4rem; letter-spacing: 8px; }
   .hero-subtitle { font-size: 0.9rem; letter-spacing: 6px; }
 }
+
+.starfield-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -3;
+}
+
+.hero-overlay-epic {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, transparent 0%, rgba(5,5,8,0.7) 60%, var(--bg-dark) 100%);
+  z-index: -1;
+}
+
+.geo-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  pointer-events: none;
+}
+
+.geo-shape {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(0, 240, 255, 0.2);
+}
+
+.geo-1 {
+  width: 60vh;
+  height: 60vh;
+  border-top-color: var(--accent-cyan);
+  border-bottom-color: var(--accent-purple, #b400ff);
+  animation: rotateGeo 20s linear infinite;
+  box-shadow: 0 0 50px rgba(0, 240, 255, 0.1), inset 0 0 50px rgba(0, 240, 255, 0.1);
+}
+
+.geo-2 {
+  width: 80vh;
+  height: 80vh;
+  border-right-color: var(--accent-purple, #b400ff);
+  border-left-color: var(--accent-cyan);
+  animation: rotateGeoReverse 25s linear infinite;
+  box-shadow: 0 0 80px rgba(180, 0, 255, 0.1), inset 0 0 80px rgba(180, 0, 255, 0.1);
+  border-style: dashed;
+}
+
+.geo-3 {
+  width: 100vh;
+  height: 100vh;
+  border: 1px solid rgba(0, 240, 255, 0.1);
+  border-top-color: var(--accent-cyan);
+  animation: rotateGeo 30s linear infinite;
+}
+
+@keyframes rotateGeo {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes rotateGeoReverse {
+  from { transform: translate(-50%, -50%) rotate(360deg); }
+  to { transform: translate(-50%, -50%) rotate(0deg); }
+}
+
+.epic-glow-text {
+  text-shadow: 0 0 20px rgba(0, 240, 255, 0.5), 0 0 40px rgba(0, 240, 255, 0.3), 0 0 80px rgba(180, 0, 255, 0.3);
+  font-family: var(--font-display);
+}
+
+.epic-btn {
+  padding: 12px 30px;
+  font-size: 1rem;
+  letter-spacing: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+  transition: all 0.3s ease;
+  margin: 0 10px;
+}
+
+.epic-btn:hover {
+  box-shadow: 0 0 40px rgba(0, 240, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+.glass-btn {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.glass-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.hub-icon {
+  margin-bottom: 10px;
+  color: var(--accent-cyan);
+  filter: drop-shadow(0 0 10px var(--accent-cyan));
+  transform: translateY(15px);
+  transition: transform 0.4s ease;
+}
+
+.image-card:hover .hub-icon {
+  transform: translateY(0);
+}
+
+.glass-overlay {
+  background: linear-gradient(to top, rgba(5,5,8,0.95) 0%, rgba(255,255,255,0.05) 100%);
+  backdrop-filter: blur(2px);
+}
